@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: sharpnet
+    runtime: docker
+    plan: free
+    repo: https://github.com/Waqar-Hassan786/sharpnet.git  # Replace with your actual GitHub repo URL
+    branch: main  # Or your default branch
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    buildCommand: docker build -t sharpnet .
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
+    healthCheckPath: /
+    autoDeploy: true

@@ -1,0 +1,712 @@
+{% extends 'base.html' %}
+
+{% block title %}SharpNet - Free Image Conversion{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <h1>SharpNet Image Converter</h1>
+    <p>Free online image conversion. Convert between 30+ formats instantly.</p>
+</section>
+
+<section class="converter-section">
+    <div class="converter-container">
+        <!-- Error message container -->
+        <div id="error-container" style="display: none;" class="error-message-container">
+            <div class="error-message">
+                <div class="error-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="12"></line>
+                        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                </div>
+                <div class="error-text" id="error-text">Error message will appear here</div>
+                <button class="error-close" onclick="this.parentElement.parentElement.style.display='none';">&times;</button>
+            </div>
+        </div>
+        
+        <form action="{{ url_for('convert_image') }}" method="post" enctype="multipart/form-data" id="conversion-form">
+            <div class="file-upload-container">
+                <div class="file-upload-area" id="drop-area">
+                    <input type="file" name="file" id="file-input" accept="image/*,.pdf,.ai,.eps,.psd,video/*,.svg" required>
+                    <label for="file-input" class="file-input-label">
+                        <div class="upload-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                        </div>
+                        <span class="upload-text">Drag & Drop your file here or click to browse</span>
+                    </label>
+                    <p class="file-name" id="file-name"></p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="format">Convert to:</label>
+                <div class="select-with-search">
+                    <div class="search-wrapper">
+                        <input type="text" id="format-search" placeholder="Search formats..." class="format-search">
+                        <span class="search-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                        </span>
+                    </div>
+                    <select name="format" id="format" required>
+                        {% for key, value in formats.items() %}
+                            <option value="{{ key }}">{{ value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="convert-btn" id="convert-btn">
+                    <span class="btn-text">Convert Now</span>
+                    <span class="btn-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M8 17l4 4 4-4"></path>
+                            <path d="M12 12v9"></path>
+                            <path d="M20.88 18.09A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.29"></path>
+                        </svg>
+                    </span>
+                </button>
+            </div>
+        </form>
+
+        <div class="loader-container" id="loader-container" style="display: none;">
+            <div class="loader"></div>
+            <p>Converting your file...</p>
+        </div>
+
+        <!-- Success message container -->
+        <div class="success-container" id="success-container" style="display: none;">
+            <div class="success-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+            </div>
+            <h2>Conversion Complete!</h2>
+            <p>Your file has been successfully converted and downloaded.</p>
+            <button class="convert-again-btn" id="convert-again-btn">Convert Another File</button>
+        </div>
+    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+                <div class="flash-message">
+                    <span class="message-text">{{ message }}</span>
+                    <button class="close-flash" onclick="this.parentElement.style.display='none';">&times;</button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+</section>
+
+<!-- Additional content section as requested -->
+<section class="info-section">
+    <div class="info-container">
+        <h2>The Ultimate Image Converter for All Your Needs</h2>
+        
+        <div class="info-text">
+            <p>SharpNet is a powerful, free online image converter that supports over 30 different file formats. Whether you're a photographer, designer, developer, or just someone who needs to convert an image quickly, SharpNet makes the process simple and efficient.</p>
+            
+            <h3>How SharpNet Works</h3>
+            <p>Our conversion process is straightforward and secure. Upload your image, select your desired output format from our extensive list, and click "Convert Now." In seconds, your converted file will be ready to download. All files are automatically deleted after 24 hours to ensure your privacy.</p>
+            
+            <h3>Key Features</h3>
+            <div class="features-columns">
+                <ul>
+                    <li><strong>30+ Supported Formats:</strong> Convert between practically any image format you can think of.</li>
+                    <li><strong>High-Quality Conversion:</strong> We maintain the integrity and quality of your images during conversion.</li>
+                    <li><strong>No Registration Required:</strong> Just upload and convert—no need to create an account.</li>
+                </ul>
+                <ul>
+                    <li><strong>Fast Processing:</strong> Our optimized algorithms ensure quick conversions.</li>
+                    <li><strong>Completely Free:</strong> No hidden fees, watermarks, or limitations.</li>
+                    <li><strong>Secure:</strong> All files are automatically deleted after processing.</li>
+                </ul>
+            </div>
+            
+            <h3>Popular Conversion Options</h3>
+            <p>Some of our most commonly used conversions include:</p>
+            <div class="popular-conversions">
+                <div class="conversion-group">
+                    <h4>Photography</h4>
+                    <ul>
+                        <li>JPG to PNG (lossless conversion)</li>
+                        <li>RAW to JPG (for sharing photos)</li>
+                        <li>HEIC to JPG (for iOS photos)</li>
+                    </ul>
+                </div>
+                <div class="conversion-group">
+                    <h4>Design & Graphics</h4>
+                    <ul>
+                        <li>PSD to PNG (from Photoshop)</li>
+                        <li>AI to SVG (from Illustrator)</li>
+                        <li>PDF to JPG (document conversion)</li>
+                    </ul>
+                </div>
+                <div class="conversion-group">
+                    <h4>Web Development</h4>
+                    <ul>
+                        <li>PNG to WebP (for faster websites)</li>
+                        <li>SVG to PNG (for compatibility)</li>
+                        <li>JPG to AVIF (next-gen format)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Why Choose SharpNet?</h3>
+            <p>Unlike other online converters that limit functionality or bombard you with ads, SharpNet offers a clean, straightforward experience focused on what matters: quick, high-quality image conversions. Our service automatically cleans up uploaded files after 24 hours, ensuring your data doesn't remain on our servers.</p>
+            
+            <p>Start converting your images today and experience the difference that SharpNet makes. No registration, no downloads—just simple, effective image conversion at your fingertips.</p>
+        </div>
+    </div>
+</section>
+
+<section class="features-section">
+    <h2>Why Choose SharpNet?</h2>
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </div>
+            <h3>30+ Formats</h3>
+            <p>Support for over 30 file formats for both input and output.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                </svg>
+            </div>
+            <h3>No Signup</h3>
+            <p>No login or signup required. Convert instantly.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+                </svg>
+            </div>
+            <h3>Lightweight</h3>
+            <p>Fast, efficient conversion with minimal wait time.</p>
+        </div>
+        <div class="feature-card">
+            <div class="feature-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+            </div>
+            <h3>Secure</h3>
+            <p>Your files are automatically deleted after conversion.</p>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+    .info-section {
+        padding: var(--spacing-xxl) 0;
+        background-color: rgba(78, 84, 200, 0.05);
+    }
+    
+    [data-theme="dark"] .info-section {
+        background-color: rgba(108, 99, 255, 0.05);
+    }
+    
+    .info-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: var(--spacing-xl);
+        background-color: var(--card-background);
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+    
+    .info-container h2 {
+        text-align: center;
+        color: var(--primary-color);
+        margin-bottom: var(--spacing-xl);
+    }
+    
+    .info-text {
+        color: var(--text-primary);
+    }
+    
+    .info-text p {
+        margin-bottom: var(--spacing-md);
+        line-height: 1.6;
+    }
+    
+    .info-text h3 {
+        color: var(--primary-color);
+        margin: var(--spacing-lg) 0 var(--spacing-md);
+    }
+    
+    .features-columns {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--spacing-lg);
+        margin: var(--spacing-md) 0;
+    }
+    
+    .features-columns ul {
+        padding-left: var(--spacing-lg);
+    }
+    
+    .features-columns li {
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .popular-conversions {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: var(--spacing-lg);
+        margin: var(--spacing-md) 0;
+    }
+    
+    .conversion-group h4 {
+        color: var(--primary-color);
+        margin-bottom: var(--spacing-sm);
+    }
+    
+    .conversion-group ul {
+        padding-left: var(--spacing-lg);
+    }
+    
+    .conversion-group li {
+        margin-bottom: var(--spacing-xs);
+        font-size: 0.9rem;
+    }
+    
+    /* Error message styles */
+    .error-message-container {
+        width: 100%;
+        margin-bottom: var(--spacing-lg);
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .error-message {
+        background-color: var(--error-color);
+        color: white;
+        border-radius: var(--border-radius);
+        padding: var(--spacing-md) var(--spacing-lg);
+        display: flex;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(220, 53, 69, 0.3);
+    }
+
+    .error-icon {
+        margin-right: var(--spacing-md);
+        flex-shrink: 0;
+    }
+
+    .error-text {
+        flex-grow: 1;
+    }
+
+    .error-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        margin-left: var(--spacing-md);
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        padding: 0;
+        line-height: 1;
+    }
+
+    .error-close:hover {
+        opacity: 1;
+    }
+
+    .fade-out {
+        animation: fadeOut 0.5s ease-out forwards;
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeOut {
+        from {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+    }
+
+    /* Flash message styles */
+    .flash-messages {
+        width: 100%;
+        max-width: 600px;
+        margin: var(--spacing-lg) auto;
+    }
+
+    .flash-message {
+        background-color: var(--error-color);
+        color: white;
+        border-radius: var(--border-radius);
+        padding: var(--spacing-md) var(--spacing-lg);
+        margin-bottom: var(--spacing-sm);
+        display: flex;
+        align-items: center;
+        box-shadow: 0 2px 10px rgba(220, 53, 69, 0.3);
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .message-text {
+        flex-grow: 1;
+    }
+
+    .close-flash {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        margin-left: var(--spacing-md);
+        opacity: 0.7;
+        transition: opacity 0.2s;
+        padding: 0;
+        line-height: 1;
+    }
+
+    .close-flash:hover {
+        opacity: 1;
+    }
+    
+    @media (max-width: 768px) {
+        .features-columns,
+        .popular-conversions {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('conversion-form');
+        const fileInput = document.getElementById('file-input');
+        const fileName = document.getElementById('file-name');
+        const dropArea = document.getElementById('drop-area');
+        const loaderContainer = document.getElementById('loader-container');
+        const successContainer = document.getElementById('success-container');
+        const convertBtn = document.getElementById('convert-btn');
+        const convertAgainBtn = document.getElementById('convert-again-btn');
+        const formatSelect = document.getElementById('format');
+        const formatSearch = document.getElementById('format-search');
+        const errorContainer = document.getElementById('error-container');
+        const errorText = document.getElementById('error-text');
+        let isConverting = false;
+        
+        // Show error message function
+        function showError(message) {
+            errorText.textContent = message;
+            errorContainer.style.display = 'block';
+            errorContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                errorContainer.classList.add('fade-out');
+                setTimeout(() => {
+                    errorContainer.style.display = 'none';
+                    errorContainer.classList.remove('fade-out');
+                }, 500);
+            }, 10000);
+        }
+        
+        // Format search functionality
+        formatSearch.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const options = formatSelect.options;
+            
+            for (let i = 0; i < options.length; i++) {
+                const optionText = options[i].text.toLowerCase();
+                const optionValue = options[i].value.toLowerCase();
+                
+                // Check if the option text or value contains the search term
+                if (optionText.includes(searchTerm) || optionValue.includes(searchTerm)) {
+                    options[i].style.display = '';
+                } else {
+                    options[i].style.display = 'none';
+                }
+            }
+            
+            // Show dropdown when typing in search
+            formatSelect.size = searchTerm ? Math.min(10, options.length) : 1;
+            if (searchTerm) {
+                formatSelect.focus();
+            }
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.closest('.select-with-search')) {
+                formatSelect.size = 1;
+            }
+        });
+        
+        // Update search field when option selected
+        formatSelect.addEventListener('change', function() {
+            formatSelect.size = 1;
+        });
+        
+        // Show file name when selected
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const size = formatFileSize(this.files[0].size);
+                fileName.textContent = `${this.files[0].name} (${size})`;
+                dropArea.classList.add('has-file');
+            } else {
+                fileName.textContent = '';
+                dropArea.classList.remove('has-file');
+            }
+        });
+        
+        // Format file size for display
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+        
+        // Drag and drop functionality
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            dropArea.classList.add('highlight');
+        }
+        
+        function unhighlight() {
+            dropArea.classList.remove('highlight');
+        }
+        
+        dropArea.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            
+            if (files && files[0]) {
+                const size = formatFileSize(files[0].size);
+                fileName.textContent = `${files[0].name} (${size})`;
+                dropArea.classList.add('has-file');
+            }
+        }
+        
+        // Handle convert again button
+        convertAgainBtn.addEventListener('click', function() {
+            successContainer.style.display = 'none';
+            form.style.display = 'block';
+            resetForm();
+        });
+        
+        // Handle form submission with AJAX
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Prevent double submissions
+            if (isConverting) {
+                return;
+            }
+            
+            // Validate form
+            if (!fileInput.files || !fileInput.files[0]) {
+                showError('Please select a file to convert');
+                return;
+            }
+            
+            // Set converting state
+            isConverting = true;
+            convertBtn.disabled = true;
+            convertBtn.classList.add('disabled');
+            
+            // Hide error if shown
+            errorContainer.style.display = 'none';
+            
+            // Show loader
+            form.style.display = 'none';
+            loaderContainer.style.display = 'flex';
+            successContainer.style.display = 'none';
+            
+            // Create FormData object
+            const formData = new FormData(form);
+            
+            try {
+                // Set AJAX header
+                const headers = new Headers();
+                headers.append('X-Requested-With', 'XMLHttpRequest');
+                
+                // Track start time for minimum loading duration
+                const startTime = Date.now();
+                
+                // Send form data
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: headers
+                });
+                
+                // Calculate elapsed time
+                const elapsedTime = Date.now() - startTime;
+                const minimumLoadTime = 1000; // 1 second minimum loading time
+                
+                // If conversion was too fast, wait to show loader for at least minimumLoadTime
+                if (elapsedTime < minimumLoadTime) {
+                    await new Promise(resolve => setTimeout(resolve, minimumLoadTime - elapsedTime));
+                }
+                
+                // Check for error responses
+                if (!response.ok) {
+                    // Try to parse error message from JSON
+                    try {
+                        const errorData = await response.json();
+                        throw new Error(errorData.error || 'Error converting file');
+                    } catch (jsonError) {
+                        // If not JSON, use text
+                        const errorText = await response.text();
+                        throw new Error(errorText || 'Error converting file');
+                    }
+                }
+                
+                // Get blob from response for file download
+                const blob = await response.blob();
+                
+                // Check if we got an HTML error page instead of a file
+                if (blob.type.includes('text/html')) {
+                    // Read the HTML content
+                    const reader = new FileReader();
+                    reader.onload = function() {
+                        // If it contains error markers, it's an error page
+                        if (reader.result.includes('error') || reader.result.includes('Error')) {
+                            throw new Error('Server returned an error page');
+                        } else {
+                            // Otherwise process as normal download
+                            downloadFile(blob, response);
+                        }
+                    };
+                    reader.onerror = function() {
+                        throw new Error('Failed to read response');
+                    };
+                    reader.readAsText(blob);
+                } else {
+                    // Normal file download
+                    downloadFile(blob, response);
+                }
+            } catch (error) {
+                console.error('Conversion failed:', error);
+                
+                // Show error message
+                loaderContainer.style.display = 'none';
+                form.style.display = 'block';
+                showError(error.message || 'Failed to convert file. Please try again.');
+                
+                // Reset form state but keep file selection
+                resetFormState();
+            }
+            
+            // Function to handle file download
+            function downloadFile(blob, response) {
+                // Create a temporary anchor element to trigger download
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                
+                // Get filename from Content-Disposition header if available, otherwise use a default
+                let filename = 'converted_file';
+                const contentDisposition = response.headers.get('Content-Disposition');
+                if (contentDisposition) {
+                    const filenameMatch = contentDisposition.match(/filename="?([^"]+)"?/);
+                    if (filenameMatch && filenameMatch[1]) {
+                        filename = filenameMatch[1];
+                    }
+                }
+                
+                // Set download attributes and trigger click
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                
+                // Clean up
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+                
+                // Hide loader and show success message
+                loaderContainer.style.display = 'none';
+                successContainer.style.display = 'flex';
+            }
+        });
+        
+        function resetForm() {
+            // Reset form completely including file selection
+            form.reset();
+            fileName.textContent = '';
+            dropArea.classList.remove('has-file');
+            resetFormState();
+        }
+        
+        function resetFormState() {
+            // Only reset the form state (not the file selection)
+            isConverting = false;
+            convertBtn.disabled = false;
+            convertBtn.classList.remove('disabled');
+            loaderContainer.style.display = 'none';
+            successContainer.style.display = 'none';
+            form.style.display = 'block';
+        }
+        
+        // Add event listeners for closing flash messages
+        document.querySelectorAll('.close-flash').forEach(button => {
+            button.addEventListener('click', function() {
+                this.parentElement.style.display = 'none';
+            });
+        });
+    });
+</script>
+{% endblock %}

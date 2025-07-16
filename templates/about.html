@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}About SharpNet{% endblock %}
+
+{% block content %}
+<section class="about-section">
+    <h1>About SharpNet</h1>
+    <div class="about-content">
+        <p>SharpNet is a free, lightweight image conversion tool designed to help you convert between hundreds of image formats quickly and easily. We believe in making image conversion simple, efficient, and accessible to everyone.</p>
+        
+        <h2>Our Mission</h2>
+        <p>Our mission is to provide a reliable, user-friendly image conversion service without the need for signups, downloads, or complicated software. We've built SharpNet to be intuitive and straightforward – just upload, convert, and download.</p>
+        
+        <h2>How It Works</h2>
+        <p>SharpNet uses ImageMagick's Wand library, a powerful image processing tool that supports over 200 image formats. When you upload an image, our server processes the conversion and immediately delivers the converted file back to you. Your original files are automatically deleted after conversion to ensure your privacy.</p>
+        
+        <h2>Supported Formats</h2>
+        <div class="formats-container">
+            <h3>Supported Input Formats</h3>
+            <p>SharpNet supports a wide range of input formats, including but not limited to:</p>
+            <div class="formats-grid">
+                <ul>
+                    <li>JPEG (.jpg, .jpeg)</li>
+                    <li>PNG (.png)</li>
+                    <li>GIF (.gif)</li>
+                    <li>BMP (.bmp)</li>
+                    <li>TIFF (.tiff, .tif)</li>
+                    <li>WebP (.webp)</li>
+                    <li>SVG (.svg)</li>
+                    <li>PDF (.pdf)</li>
+                    <li>PSD (.psd)</li>
+                    <li>ICO (.ico)</li>
+                </ul>
+                <ul>
+                    <li>HEIC (.heic)</li>
+                    <li>RAW formats (.raw)</li>
+                    <li>Canon Raw (.cr2)</li>
+                    <li>Nikon Raw (.nef)</li>
+                    <li>Sony Raw (.arw)</li>
+                    <li>Adobe DNG (.dng)</li>
+                    <li>Adobe Illustrator (.ai)</li>
+                    <li>EPS (.eps)</li>
+                    <li>TARGA (.tga)</li>
+                    <li>And many more...</li>
+                </ul>
+            </div>
+            
+            <h3>Supported Output Formats</h3>
+            <p>Convert your images to any of the following formats:</p>
+            <div class="formats-list">
+                <ul>
+                    {% for key, value in formats.items() %}
+                        <li><strong>{{ key.upper() }}</strong> - {{ value }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        
+        <h2>Privacy & Security</h2>
+        <p>We take your privacy seriously. SharpNet does not store your images after conversion – they are automatically deleted from our servers. We do not track individual usage or require any personal information to use our service.</p>
+        
+        <h2>Contact Us</h2>
+        <p>Have questions, suggestions, or feedback? We'd love to hear from you. Contact us at support@sharpnet.com.</p>
+    </div>
+</section>
+{% endblock %}

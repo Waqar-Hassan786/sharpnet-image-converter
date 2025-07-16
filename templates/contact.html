@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+
+{% block title %}Contact Us - SharpNet{% endblock %}
+
+{% block extra_head %}
+    <meta name="description" content="Contact SharpNet's support team for help with our image conversion service or to provide feedback.">
+    
+    <style>
+        .contact-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .contact-intro {
+            font-size: 1.1rem;
+            margin-bottom: var(--spacing-xl);
+            text-align: center;
+        }
+        
+        .contact-methods {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xxl);
+        }
+        
+        .contact-method h2,
+        .contact-form-container h2 {
+            margin-bottom: var(--spacing-md);
+            color: var(--primary-color);
+        }
+        
+        .contact-form .form-group {
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .contact-form label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+        
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background-color: var(--card-background);
+            color: var(--text-primary);
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .submit-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            padding: var(--spacing-md) var(--spacing-xl);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color var(--transition-speed), transform var(--transition-speed);
+        }
+        
+        .submit-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .form-success {
+            background-color: var(--success-color);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        
+        .faq-section {
+            margin-top: var(--spacing-xxl);
+        }
+        
+        .faq-section h2 {
+            text-align: center;
+            margin-bottom: var(--spacing-lg);
+            color: var(--primary-color);
+        }
+        
+        .faq-item {
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-lg);
+            background-color: var(--card-background);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        .faq-item h3 {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        @media (max-width: 768px) {
+            .contact-methods {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<section class="about-section">
+    <h1>Contact Us</h1>
+    <div class="contact-content">
+        <p class="contact-intro">Have questions, feedback, or need support? We'd love to hear from you!</p>
+        
+        <div class="contact-methods">
+            <div class="contact-method">
+                <h2>Email</h2>
+                <p>For general inquiries: <a href="mailto:support@sharpnet.com">support@sharpnet.com</a></p>
+                <p>For technical support: <a href="mailto:tech@sharpnet.com">tech@sharpnet.com</a></p>
+                <p>For business inquiries: <a href="mailto:business@sharpnet.com">business@sharpnet.com</a></p>
+            </div>
+            
+            <div class="contact-form-container">
+                <h2>Send us a message</h2>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Your name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Your email address" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" placeholder="Subject of your message" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" placeholder="Write your message here" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Send Message</button>
+                </form>
+                <div class="form-success" style="display: none;">
+                    <p>Thank you for your message! We'll get back to you soon.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="faq-section">
+            <h2>Frequently Asked Questions</h2>
+            <div class="faq-item">
+                <h3>How long are my files stored?</h3>
+                <p>All files are automatically deleted after conversion or after 24 hours, whichever comes first.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is there a file size limit?</h3>
+                <p>Yes, the maximum file size is 16MB. If you need to convert larger files, please contact us for assistance.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Do you offer batch conversion?</h3>
+                <p>Currently, we only support single file conversions. Batch conversion is on our roadmap for future updates.</p>
+            </div>
+            <div class="faq-item">
+                <h3>Is SharpNet free to use?</h3>
+                <p>Yes, SharpNet is completely free for all users with no hidden costs or subscription fees.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const contactForm = document.querySelector('.contact-form');
+        const formSuccess = document.querySelector('.form-success');
+        
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // In a real application, you would send the form data to your server here
+                // For now, we'll just simulate a successful submission
+                
+                contactForm.style.display = 'none';
+                formSuccess.style.display = 'block';
+            });
+        }
+    });
+</script>
+{% endblock %}

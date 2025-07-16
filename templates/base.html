@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SharpNet - Free online image converter. Convert between 295+ formats including JPG, PNG, GIF, WebP, HEIC, SVG, PDF, PSD, and more.">
+    <title>{% block title %}SharpNet - Free Online Image Converter{% endblock %}</title>
+    <!-- Use url_for to ensure correct paths in all deployment scenarios -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    {% block extra_head %}{% endblock %}
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='logo_icon.ico') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='logo.png') }}"
+    <meta name="description" content="SharpNet is a free online image converter supporting 30+ formats including PNG, JPG, PSD, PDF, WebP. We're expanding to 295 formats based on user demand.">
+    <meta name="keywords" content="online converter, SharpNet, jpg to png, png to jpg, png to pdf, jpg to pdf, convert images online, webp to jpg, heic to jpg, tiff to pdf, convert jpeg to png, gif to png, image converter, raw to jpg, cr2 to jpg, psd to png, svg to png, svg to jpg, bmp to png, eps to png, ai to png, convert image formats, online image converter, free image converter, heic to png, webp converter, apng to gif, jpg to svg, jpegxl to jpg, dng to jpg, convert images free, batch image converter, image to pdf, convert photo to png, online photo converter, png to ico, jpg to ico, transparent png converter, xcf to png, convert ai to svg, eps to pdf, webp to png, webp to gif, image file converter, convert to jpeg, image format changer, best image converter, jpg to webp, png to webp, convert tga to png, animated webp converter, online psd converter, indd to pdf, jp2 to jpg">
+
+    <meta name="author" content="SharpNet Team">
+
+    <!-- Open Graph (for social media previews) -->
+    <meta property="og:title" content="SharpNet – Free Image Converter (30+ Formats)">
+    <meta property="og:description" content="Convert images between 30+ formats fast and free. No signup. SharpNet is expanding to 295+ formats.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sharpnet.app">
+    <meta property="og:image" content="https://sharpnet.app/static/logo.png">
+
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SharpNet – Free Image Converter">
+    <meta name="twitter:description" content="Convert images between 30+ formats including PNG, JPG, PDF, PSD, and more. Fast, free, expanding to 295 formats.">
+    <meta name="twitter:image" content="https://sharpnet.app/static/logo.png">
+
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+            <div class="logo">
+                <a href="{{ url_for('index') }}">
+                    <img src="{{ url_for('static', filename='logo.png') }}" alt="SharpNet Logo" style="height: 70px; vertical-align: middle; margin-right: 8px;">
+                    <span style="font-weight: bold; font-size: 1.2rem; color: #786fff;">SharpNet</span>
+                </a>
+            </div>
+                <ul class="nav-links">
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('about') }}">About</a></li>
+                    <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                    <li>
+                        <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode">
+                            <!-- Sun icon for light mode -->
+                            <svg id="light-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="5"></circle>
+                                <line x1="12" y1="1" x2="12" y2="3"></line>
+                                <line x1="12" y1="21" x2="12" y2="23"></line>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                <line x1="1" y1="12" x2="3" y2="12"></line>
+                                <line x1="21" y1="12" x2="23" y2="12"></line>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                            </svg>
+                            <!-- Moon icon for dark mode -->
+                            <svg id="dark-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                            </svg>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <main>
+        <div class="container">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for message in messages %}
+                            <div class="flash-message">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <a href="{{ url_for('index') }}">SharpNet</a>
+                    <p>Free online image conversion</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-links-column">
+                        <h3>Product</h3>
+                        <ul>
+                            <li><a href="{{ url_for('index') }}">Home</a></li>
+                            <li><a href="{{ url_for('about') }}">About</a></li>
+                            <li><a href="{{ url_for('contact') }}">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-links-column">
+                        <h3>Legal</h3>
+                        <ul>
+                            <li><a href="{{ url_for('privacy_policy') }}">Privacy Policy</a></li>
+                            <li><a href="{{ url_for('terms') }}">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SharpNet. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

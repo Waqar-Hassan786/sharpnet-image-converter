@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Error - SharpNet{% endblock %}
+
+{% block content %}
+<section class="error-section">
+    <div class="error-container">
+        <div class="error-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+        </div>
+        <h1>Oops! Something went wrong</h1>
+        <p class="error-message">{{ error }}</p>
+        <div class="error-actions">
+            <a href="{{ url_for('index') }}" class="button">Try Again</a>
+        </div>
+    </div>
+    
+    <div class="error-help">
+        <h2>Common Issues & Solutions</h2>
+        <div class="help-items">
+            <div class="help-item">
+                <h3>Unsupported File Format</h3>
+                <p>Make sure your file is in one of our supported formats. Check the <a href="{{ url_for('about') }}">About page</a> for a complete list.</p>
+            </div>
+            <div class="help-item">
+                <h3>File Too Large</h3>
+                <p>The maximum file size is 16MB. Try compressing your file before uploading.</p>
+            </div>
+            <div class="help-item">
+                <h3>Corrupted File</h3>
+                <p>Your file may be corrupted or damaged. Try uploading a different file.</p>
+            </div>
+            <div class="help-item">
+                <h3>Conversion Error</h3>
+                <p>Some complex conversions may fail. Try converting to a different format or simplify your image.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
