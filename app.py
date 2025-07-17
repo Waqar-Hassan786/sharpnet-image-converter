@@ -7,6 +7,7 @@ from flask import Flask, render_template, request, send_file, jsonify, flash, re
 from werkzeug.utils import secure_filename
 from wand.image import Image
 from wand.exceptions import WandException
+from flask import send_from_directory
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -179,7 +180,9 @@ def server_error(e):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return jsonify({'error': msg}), 500
     return redirect(url_for('index'))
-
+@app.route("/robots.txt")
+def robots_txt():
+    return send_from_directory("static", "robots.txt")
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=False)
 
