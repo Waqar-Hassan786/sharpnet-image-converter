@@ -30,7 +30,8 @@ RUN mkdir -p uploads && chmod 777 uploads
 ENV PYTHONUNBUFFERED=1
 
 # Expose the port the app runs on
-EXPOSE 8080
+EXPOSE 8000
+
 
 # Command to run the application
-CMD gunicorn --bind 0.0.0.0:$PORT app:app
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "app:app"]
