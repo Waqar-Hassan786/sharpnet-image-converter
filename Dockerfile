@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Configure ImageMagick policy to allow reading/writing PDF and other formats
-RUN sed -i 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' /etc/ImageMagick-6/policy.xml
+RUN find /etc -name policy.xml -exec sed -i 's/rights="none" pattern="PDF"/rights="read|write" pattern="PDF"/' {} \;
 
 # Copy requirements file
 COPY requirements.txt .
